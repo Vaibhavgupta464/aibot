@@ -1,0 +1,6 @@
+streamlit
+pandas
+json
+openai
+requests
+bs4
