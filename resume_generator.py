@@ -24,6 +24,8 @@ job_map = {}
 html_content = None
 
 if source_option == "Upload HTML":
+    html_content = None
+    selected_link = None  
     st.header("Upload HTML Content Containing Job Links")
     html_file = st.file_uploader("Upload HTML file", type=["html", "htm"])
 
