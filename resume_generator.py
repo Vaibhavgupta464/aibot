@@ -3,8 +3,16 @@ import requests
 import openai
 from bs4 import BeautifulSoup
 
+# Sidebar for API key input
+st.sidebar.title("API Key Settings")
+api_key_input = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+
+if not api_key_input:
+    st.warning("Please enter your OpenAI API Key in the sidebar to continue.")
+    st.stop()
+
 # Set your OpenAI API key
-client = openai.OpenAI(api_key=st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else "your-api-key-here")
+client = openai.OpenAI(api_key=api_key_input)
 
 # --- Step 1: Extract Job Links from HTML Content ---
 st.title("AI Resume Generator from Job Description")
