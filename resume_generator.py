@@ -175,3 +175,10 @@ Make the resume focused, polished, and aligned with the job role. Format it clea
                 st.error(f"Failed to extract job description or generate resume: {str(e)}")
     else:
         st.warning("No valid LinkedIn job links found in the uploaded HTML.")
+
+st.markdown("""
+<hr style="margin-top: 3em;">
+<div style='text-align: center; font-size: 0.9em; color: grey;'>
+    Built with ❤️ by <a href='https://www.linkedin.com/in/vaibhav-gupta-897096140/' target='_blank'>Vaibhav Gupta</a>
+</div>
+""", unsafe_allow_html=True)
