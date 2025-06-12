@@ -56,7 +56,7 @@ Text:
 """
 
                 summary_response = client.chat.completions.create(
-                    model="gpt-4",
+                    model="gpt-4o",
                     messages=[
                         {"role": "system", "content": "You extract brief job summaries from job pages."},
                         {"role": "user", "content": ai_summary_prompt}
@@ -118,7 +118,7 @@ Text:
 
             with st.spinner("Extracting job details with AI..."):
                 extraction_response = client.chat.completions.create(
-                    model="gpt-4",
+                    model="gpt-4o",
                     messages=[
                         {"role": "system", "content": "You are a helpful assistant that extracts structured job data."},
                         {"role": "user", "content": ai_extraction_prompt}
