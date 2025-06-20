@@ -53,7 +53,7 @@ if source_option == "Upload HTML":
 
     if "selected_link" not in st.session_state:
         st.session_state.selected_link = None
-
+    job_display_list = []
     if html_file:
         html_content = html_file.read()
         soup = BeautifulSoup(html_content, "html.parser")
@@ -103,9 +103,9 @@ Text:
             except Exception:
                 continue
 
-    #if job_display_list:
-    selected_display = st.selectbox("Step 2: Select a Job to Generate Resume", job_display_list)
-    selected_link = job_map.get(selected_display)
+    if job_display_list:
+        selected_display = st.selectbox("Step 2: Select a Job to Generate Resume", job_display_list)
+        selected_link = job_map.get(selected_display)
 
 elif source_option == "Enter Job Link":
     st.header("Enter a Direct LinkedIn Job Link")
