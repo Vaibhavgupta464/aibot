@@ -2,17 +2,24 @@ import streamlit as st
 import requests
 import openai
 from bs4 import BeautifulSoup
+import google.generativeai as genai
 
 # Sidebar for API key input
 st.sidebar.title("API Key Settings")
-api_key_input = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+api_key_input = st.sidebar.text_input("Enter your OpenAI/Gemini API Key", type="password")
 
 if not api_key_input:
     st.warning("Please enter your OpenAI API Key in the sidebar to continue.")
     st.stop()
 
 # Set your OpenAI API key
-client = openai.OpenAI(api_key=api_key_input)
+if api_key_input.startswith("sk-"):
+    st.spinner("This is an OpenAI API key.")
+    client = openai.OpenAI(api_key=api_key_input)
+elif api_key_input.startswith("AI"):
+    st.spinner("This is a Google Gemini API key.")
+    genai.configure(api_key= api_key_input)
+
 
 # --- Step 1: Select Data Source ---
 st.title("AI Resume Generator from Job Description")
@@ -54,16 +61,20 @@ Job Title: <title>\nCompany: <company>
 Text:
 {page_text[:3000]}
 """
-
-                summary_response = client.chat.completions.create(
-                    model="gpt-4o",
-                    messages=[
-                        {"role": "system", "content": "You extract brief job summaries from job pages."},
-                        {"role": "user", "content": ai_summary_prompt}
-                    ]
-                )
-
-                summary_lines = summary_response.choices[0].message.content.splitlines()
+                if api_key_input.startswith("sk-"):
+                    summary_response = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {"role": "system", "content": "You extract brief job summaries from job pages."},
+                            {"role": "user", "content": ai_summary_prompt}
+                        ]
+                    )
+                    summary_lines = summary_response.choices[0].message.content.splitlines()
+                else:
+                    model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+                    summary_response = model.generate_content(ai_summary_prompt)
+                    summary_lines = summary_response.text.splitlines()
+                    
                 title = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("job title:")), "Unknown")
                 company = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("company:")), "Unknown")
                 display = f"{title} at {company}"
@@ -117,15 +128,19 @@ Text:
 """
 
             with st.spinner("Extracting job details with AI..."):
-                extraction_response = client.chat.completions.create(
-                    model="gpt-4o",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant that extracts structured job data."},
-                        {"role": "user", "content": ai_extraction_prompt}
-                    ]
-                )
-
-                extracted = extraction_response.choices[0].message.content
+                if api_key_input.startswith("sk-"):
+                    extraction_response = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {"role": "system", "content": "You are a helpful assistant that extracts structured job data."},
+                            {"role": "user", "content": ai_extraction_prompt}
+                        ]
+                    )
+                    extracted = extraction_response.choices[0].message.content
+                else:
+                    model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+                    extraction_response = model.generate_content(ai_extraction_prompt)
+                    extracted = extraction_response.text
 
                 title = "Unknown"
                 company = "Unknown"
@@ -171,15 +186,19 @@ Make the resume focused, polished, and aligned with the job role. Format it clea
 """
 
                 with st.spinner("Generating resume with AI..."):
-                    chat_response = client.chat.completions.create(
-                        model="gpt-4",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant that writes resumes."},
-                            {"role": "user", "content": prompt}
-                        ]
-                    )
-
-                    ai_resume = chat_response.choices[0].message.content
+                    if api_key_input.startswith("sk-"):
+                        chat_response = client.chat.completions.create(
+                            model="gpt-4",
+                            messages=[
+                                {"role": "system", "content": "You are a helpful assistant that writes resumes."},
+                                {"role": "user", "content": prompt}
+                            ]
+                        )
+                        ai_resume = chat_response.choices[0].message.content
+                    else:
+                        model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+                        chat_response = model.generate_content(prompt)
+                        ai_resume = chat_response.text
 
                     # Add credit at the bottom
                     ai_resume += """
