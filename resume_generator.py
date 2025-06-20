@@ -30,6 +30,12 @@ job_links = []
 job_map = {}
 html_content = None
 
+if "selected_display" not in st.session_state:
+    st.session_state.selected_display = None
+
+if "selected_link" not in st.session_state:
+    st.session_state.selected_link = None
+
 if source_option == "Upload HTML":
     html_content = None
     selected_link = None  
