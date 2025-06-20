@@ -35,7 +35,6 @@ if source_option == "Upload HTML":
     selected_link = None  
     st.header("Upload HTML Content Containing Job Links")
     html_file = st.file_uploader("Upload HTML file", type=["html", "htm"])
-    
     # --- Session State Initialization ---
     if "job_display_list" not in st.session_state:
         st.session_state.job_display_list = []
@@ -48,7 +47,7 @@ if source_option == "Upload HTML":
 
     if "selected_link" not in st.session_state:
         st.session_state.selected_link = None
-        
+
     if html_file:
         html_content = html_file.read()
         soup = BeautifulSoup(html_content, "html.parser")
@@ -59,7 +58,7 @@ if source_option == "Upload HTML":
                 job_links.append(href)
 
         job_links = list(set(job_links))
-
+ 
         job_display_list = []
         for link in job_links:
             try:
@@ -87,7 +86,8 @@ Text:
                     model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
                     summary_response = model.generate_content(ai_summary_prompt)
                     summary_lines = summary_response.text.splitlines()
-                    
+
+                
                 title = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("job title:")), "Unknown")
                 company = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("company:")), "Unknown")
                 display = f"{title} at {company}"
@@ -97,9 +97,9 @@ Text:
             except Exception:
                 continue
 
-        if job_display_list:
-            selected_display = st.selectbox("Step 2: Select a Job to Generate Resume", job_display_list)
-            selected_link = job_map.get(selected_display)
+    if job_display_list:
+        selected_display = st.selectbox("Step 2: Select a Job to Generate Resume", job_display_list)
+        selected_link = job_map.get(selected_display)
 
 elif source_option == "Enter Job Link":
     st.header("Enter a Direct LinkedIn Job Link")
