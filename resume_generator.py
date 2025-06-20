@@ -35,7 +35,20 @@ if source_option == "Upload HTML":
     selected_link = None  
     st.header("Upload HTML Content Containing Job Links")
     html_file = st.file_uploader("Upload HTML file", type=["html", "htm"])
+    
+    # --- Session State Initialization ---
+    if "job_display_list" not in st.session_state:
+        st.session_state.job_display_list = []
 
+    if "job_map" not in st.session_state:
+        st.session_state.job_map = {}
+
+    if "selected_display" not in st.session_state:
+        st.session_state.selected_display = None
+
+    if "selected_link" not in st.session_state:
+        st.session_state.selected_link = None
+        
     if html_file:
         html_content = html_file.read()
         soup = BeautifulSoup(html_content, "html.parser")
