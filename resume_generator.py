@@ -78,10 +78,7 @@ Text:
                 title = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("job title:")), "Unknown")
                 company = next((line.split(":", 1)[1].strip() for line in summary_lines if line.lower().startswith("company:")), "Unknown")
                 display = f"{title} at {company}"
-                seen_jobs = set()
-                if display not in seen_jobs:
-                    seen_jobs.add(display)
-                    job_display_list.append(display)
+                job_display_list.append(display)
                 job_map[display] = link
 
             except Exception:
