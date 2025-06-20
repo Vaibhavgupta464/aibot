@@ -9,7 +9,7 @@ st.sidebar.title("API Key Settings")
 api_key_input = st.sidebar.text_input("Enter your OpenAI/Gemini API Key", type="password")
 
 if not api_key_input:
-    st.warning("Please enter your OpenAI API Key in the sidebar to continue.")
+    st.warning("Please enter your OpenAI/Gemini API Key in the sidebar to continue.")
     st.stop()
 
 # Set your OpenAI API key
